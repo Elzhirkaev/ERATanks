@@ -1,0 +1,148 @@
+﻿@model WorldOfTanks.Models.ViewModels.TankVM
+@{
+    var title = "Create Tank";
+}
+
+<form method="post" enctype="multipart/form-data">
+    @if (Model.Tank!.TankId != 0)
+    {
+        title = "Edit Tank";
+        <input asp-for="Tank!.TankId" hidden />
+        <input asp-for="Tank!.Image" hidden />
+    }
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info ps-3">@title</h2>
+        </div>
+        <div class="row">
+            <div class="col-8 m-3">
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Tank!.Name" class="form-control" />
+                        <span asp-validation-for="Tank!.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Tank!.Description" class="form-control"></textarea>
+                        <span asp-validation-for="Tank!.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.RebirthPoints"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Tank!.RebirthPoints" class="form-control" />
+                        <span asp-validation-for="Tank!.RebirthPoints" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.Image"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.SpeedTank"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Tank!.SpeedTank" class="form-control" />
+                        <span asp-validation-for="Tank!.SpeedTank" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.SpeedUp"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Tank!.SpeedUp" class="form-control" />
+                        <span asp-validation-for="Tank!.SpeedUp" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.SpeedRotation"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Tank!.SpeedRotation" class="form-control" />
+                        <span asp-validation-for="Tank!.SpeedRotation" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.Health"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Tank!.Health" class="form-control" />
+                        <span asp-validation-for="Tank!.Health" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Tank!.WeaponId"></label>
+                    </div>
+                    <div class="col-8">
+                        <select asp-for="Tank!.WeaponId" asp-items="@Model.WeaponSelectList" class="form-control">
+                            <option disabled selected>--Select Weapon--</option>
+                            <span asp-validation-for="Tank!.WeaponId" class="text-danger"></span>
+                        </select>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            @if (Model.Tank.TankId != 0)
+                            {
+                                <input type="submit" class="btn btn-success w-100" value="Edit" />
+                            }
+                            else
+                            {
+                                <input type="submit" onclick="return validateInput()" class="btn btn-success w-100" value="Create" />
+                            }
+
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                @if (Model.Tank.TankId != 0)
+                {
+                    <img src="@WC.ImageTankPath@Model.Tank.Image" style="width:100%; border-radius:5px; border:1px solid #bbb" />
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire(
+                    'Error!',
+                    'Please upload an Image',
+                    'error'
+                )
+                return false
+            }
+            return true
+        }
+    </script>
+}
+

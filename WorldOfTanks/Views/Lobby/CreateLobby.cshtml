@@ -1,0 +1,121 @@
+﻿@model WorldOfTanks.Models.ViewModels.LobbyVM
+<form method="post">
+    <input asp-for="GameLobby!.PlayerList![0].Name" class="form-control" hidden/>
+    <input asp-for="GameLobby!.MapId" hidden/>
+    <input asp-for="GameLobby!.NumOfTeams" hidden />
+    <div class="border mt-3">
+        <div class="row">
+            <div class="col-2">
+                <h4 class="text-info ms-3 mt-3">Create Lobby</h4>
+                @if(Model.Error!=null)
+                {
+                    <h6 class="text-danger p-2" id="messageError">@Model.Error</h6>
+                }
+                else
+                {
+                    <h6 class="text-danger p-2" id="messageError"></h6>
+                }
+                <div class="ms-3 ">
+                    <div>
+                        <label asp-for="GameLobby!.Name"></label>
+                    </div>
+                    <div>
+                        <input asp-for="GameLobby!.Name" class="form-control" />
+                        <span asp-validation-for="GameLobby!.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class=" ms-3 pt-2">
+                    <div>
+                        <label asp-for="GameLobby!.MaxPlayer"></label>
+                    </div>
+                    <div>
+                        <input asp-for="GameLobby!.MaxPlayer" value="2" class="form-control" />
+                        <span asp-validation-for="GameLobby!.MaxPlayer" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class=" ms-3 pt-2">
+                    <div>
+                        <label asp-for="GameLobby!.RebirthPoints"></label>
+                    </div>
+                    <div>
+                        <input asp-for="GameLobby!.RebirthPoints" value="100" class="form-control" />
+                        <span asp-validation-for="GameLobby!.RebirthPoints" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class=" ms-3 pt-2">
+                    <div>
+                        <label asp-for="GameLobby!.FriendlyFire"></label>
+                        <input type="checkbox" asp-for="GameLobby!.FriendlyFire" />
+                    </div>
+                </div>
+                <div class="ms-3 pt-2">
+                    <h6 class="m-0">Map List</h6>
+                    <div id="chatDiv" class="border" style="height: 200px; overflow-y: auto;">
+                        @foreach (var item in Model.MapList!)
+                        {
+                            <div>
+                                <button type="button" onmousedown="render(@item.MapId,@item.NumOfTeams)" class="btn btn-info w-100 p-0">
+                                    @item.Name
+                                </button>
+                                <input asp-for="@item.Author" id="Author_@item.MapId" hidden />
+                                <input asp-for="@item.Width" id="width_@item.MapId" hidden />
+                                <input asp-for="@item.Height" id="height_@item.MapId" hidden />
+                                <input asp-for="@item.MapPointListBG" id="MapPointListBG_@item.MapId" hidden />
+                                <input asp-for="@item.MapPointListCV" id="MapPointListCV_@item.MapId" hidden />
+                            </div>
+                            
+                        }
+                    </div>
+                </div>
+                <div hidden >
+                    @foreach (var item in Model.MapElementList!)
+                    {
+                        if (item.Background)
+                        {
+                            string url = WC.ImageMapElementPath + item.Image;
+                            <img src=@url class="w-100 border border-white rounded" id="imgBG-@item.PasMapElementId" />
+                        }
+                    }
+                    @foreach (var item in Model.MapElementList)
+                    {
+                        if (!item.Background)
+                        {
+                            string url = WC.ImageMapElementPath + item.Image;
+                            <img src=@url class="w-100 border border-white rounded" id="imgCV-@item.PasMapElementId" />
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-10 " onmousedown=" return false">
+                <div>
+                    <div class="mt-2 row m-auto" style="width:550px;height:550px" id="mapBlock"></div>
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-10">
+                <div class="row justify-content-center">
+                    <div class="col-6 row">
+                        <div class="col-6">
+                            <input type="submit" class="btn btn-success w-100" onclick="validMap(event)" value="Create" id="createBtn"/>
+                        </div>
+                        <div class="col-6">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+</form>
+
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script src="~/js/CreateLobby.js"></script>
+}

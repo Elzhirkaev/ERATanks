@@ -1,0 +1,69 @@
+﻿@using Microsoft.AspNetCore.Http
+@using WorldOfTanks.Utility
+@using WorldOfTanks.Models.GameLobbyModels
+@model WorldOfTanks.Models.GameLobbyModels.GameLobby
+@inject IHttpContextAccessor HttpContextAccsessor
+@{
+    string chatMesList = System.Text.Json.JsonSerializer.Serialize(Model.chatMessageList);
+    SessionPlayer? sessionPlayer = HttpContextAccsessor.HttpContext!.Session.Get<SessionPlayer>(WC.SessionPlayer);
+    int flag = 0;
+    if (sessionPlayer != null)
+    {
+        if (sessionPlayer.PlayerHost)
+        {
+            flag = 1;
+        }
+        else
+        {
+            flag = 2;
+        }
+    };
+}
+<div hidden>
+    <input asp-for="@chatMesList" id="chatMesList" hidden />
+    <audio src="~/sound/message.mp3" id="sound_message"></audio>
+</div>
+<div class="row mt-3">
+    <input asp-for="NumOfTeams" hidden/>
+    <h2 class="col-4">Lobby: @Model.Name</h2>
+    <div class ="col-8 text-end">
+        @if (flag == 1)
+        {
+            <a asp-controller="Game" asp-action="GameStart" class="btn btn-success mx-1" id="startBtn" onclick="validReady(event)">Start Game</a>
+            <button class="btn btn-info" onclick="getPlayerList()">refresh</button>
+            <a asp-action="DeleteLobby" class="btn btn-danger mx-1">Delete Lobby</a>
+        }
+        @if (flag == 2)
+        {
+            <button class="btn btn-info" onclick="getPlayerList()">refresh</button>
+            <a asp-action="ExitLobby" class="btn btn-danger mx-1">Exit</a>
+        }
+    </div>
+</div>
+<div id="playerList">
+
+</div>
+<div class="row">
+    <div class="col">
+        <div class="p-0">
+            <div>
+                <div id="chatDiv" class="border" style="height: 100px; overflow-y: auto;">
+                    <div class="ps-3 text-center border">Chat</div>
+                </div>
+            </div>
+        </div>
+        <div class="ms-0 row me-0">
+            <div class="col-sm-8 p-0">
+                <input class="form-control" type="text" placeholder="Input text" id="chatMesInput" minlength="1" maxlength="100" />
+            </div>
+            <button class="btn btn-info col-sm-2" onclick="sendMessage()">Send</button>
+            <button class="btn btn-danger col-sm-2" id="hideChat" onclick="hideChatik()">OFF</button>
+            <button class="btn btn-success col-sm-2" id="showChat" onclick="showChatik()" hidden>ON</button>
+        </div>
+        <div id="validMessage" class="ms-3 text-center text-danger">_</div>
+    </div>
+</div>
+
+@section Scripts{
+    <script src="~/js/Lobby.js"></script>
+}

@@ -1,0 +1,119 @@
+﻿@model WorldOfTanks.Models.GameObject.Weapon
+@{
+    var title = "Create Weapon";
+}
+
+<form method="post" enctype="multipart/form-data">
+    @if (Model.WeaponId != 0)
+    {
+        title = "Edit Weapon";
+        <input asp-for="WeaponId" hidden />
+        <input asp-for="Image" hidden />
+    }
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info ps-3">@title</h2>
+        </div>
+        <div class="row">
+            <div class="col-8 m-3">
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" class="form-control" />
+                        <span asp-validation-for="Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Description" class="form-control"></textarea>
+                        <span asp-validation-for="Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Image"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Damage"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Damage" class="form-control" />
+                        <span asp-validation-for="Damage" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="FiringRate"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="FiringRate" class="form-control" />
+                        <span asp-validation-for="FiringRate" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="BulletSpeed"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="BulletSpeed" class="form-control" />
+                        <span asp-validation-for="BulletSpeed" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            @if (Model.WeaponId != 0)
+                            {
+                                <input type="submit" class="btn btn-success w-100" value="Edit" />
+                            }
+                            else
+                            {
+                                <input type="submit" onclick="return validateInput()" class="btn btn-success w-100" value="Create" />
+                            }
+
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                @if (Model.WeaponId != 0)
+                {
+                    <img src="@WC.ImageWeaponPath@Model.Image" style="height:100%; border-radius:5px; border:1px solid #bbb" />
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script>
+        function validateInput() {
+            if (document.getElementById("uploadBox").value == "") {
+                Swal.fire(
+                    'Error!',
+                    'Please upload an Image',
+                    'error'
+                )
+                return false
+            }
+            return true
+        }
+    </script>
+}
+

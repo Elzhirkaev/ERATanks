@@ -1,0 +1,58 @@
+﻿@model IEnumerable<WorldOfTanks.Models.GameObject.PassiveMapElement>
+
+<div class="p-3">
+    <div class="row pt-4">
+        <div class="col-4">
+            <h2 class="text-primary">Map Element Editor</h2>
+        </div>
+        <div class="col-8 text-end">
+            <a asp-action="CreateEditMapElement" asp-route-Ind="0" class="btn btn-primary">Create New BackGround ME</a>
+            <a asp-action="CreateEditMapElement" asp-route-Ind="1" class="btn btn-primary">Create New Coverage ME</a>
+        </div>
+    </div>
+
+    <br /><br />
+    @if (Model.Count()>0)
+    {
+        <table class="table table-bordered table-striped" width="100%">
+            <thead>
+                <tr>
+                    <th>Map Element Name</th>
+                    <th>Type</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td width="25%">@obj.Name</td>
+                        @if (obj.Background)
+                        {
+                            <td width="25%">Background</td>
+                        }
+                        else
+                        {
+                            <td width="25%">Coverage</td>
+                        }
+                        <td width="25%">@obj.Description</td>
+                        <td>
+                            <div class="text-center">
+                                <div class="btn-group">
+                                    <a asp-route-Id="@obj.PasMapElementId" asp-action="CreateEditMapElement" class="btn btn-primary mx-1">Edit</a>
+                                    <a asp-route-Id="@obj.PasMapElementId" asp-action="DeleteMapElement" class="btn btn-danger mx-1">Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>no map element exists.</p>
+    }
+
+</div>

@@ -1,0 +1,88 @@
+﻿@model WorldOfTanks.Models.GameObject.Tank
+
+<form method="post">
+    <input asp-for="TankId" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info ps-3">Delete Tank</h2>
+        </div>
+        <div class="row">
+            <div class="col-8 m-3">
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Description" disabled class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="SpeedTank"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SpeedTank" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="SpeedUp"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SpeedUp" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="SpeedRotation"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="SpeedRotation" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Health"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Health" disabled class="form-control" />
+                    </div>
+                </div>
+                 <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="WeaponId"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Weapon!.Name" disabled class="form-control" />
+                    </div>
+                </div>
+
+                <div class="row p-2">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-danger w-100" value="Delete" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+
+                <img src="@WC.ImageTankPath@Model.Image" style="width:100%; border-radius:5px; border:1px solid #bbb" />
+
+            </div>
+        </div>
+    </div>
+</form>
+
+

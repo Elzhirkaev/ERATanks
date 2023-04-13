@@ -1,0 +1,102 @@
+﻿@using Microsoft.AspNetCore.Http
+@using WorldOfTanks.Controllers;
+@using WorldOfTanks.Utility
+@using WorldOfTanks.Models.GameLobbyModels
+@using Microsoft.AspNetCore.Identity;
+@inject IHttpContextAccessor HttpContextAccsessor
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ERATanks</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/WorldOfTanks.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+        <nav class="navbar navbar-light navbar-expand bg-white border-bottom box-shadow">
+            <div class="container-xxl justify-content-start">
+                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">ERATanks</a>
+                <div class="btn-group me-2">
+                    <button type="button" class="btn dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                        Edit menu
+                    </button>
+                    <ul class="dropdown-menu">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Map" asp-action="index">Map Edit</a>
+                        </li>
+                        @if (User.IsInRole(WC.AdminRole))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="MapElement" asp-action="index">Map Element Edit</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Weapon" asp-action="index">Weapon Edit</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Tank" asp-action="index">Tank Edit</a>
+                            </li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li class="nav-item">
+                                <a class="nav-link text-dark" asp-area="Identity" asp-page="/Account/Register">Create Admin</a>
+                            </li>
+                        }
+                    </ul>
+                </div>
+                <div>
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Lobby" asp-action="index">Lobby List</a>
+                        </li>
+                    </ul>
+                </div>
+                <div class="ms-auto">
+                    <ul class="navbar-nav flex-grow-1">
+                        @if (HttpContextAccsessor.HttpContext != null && HttpContextAccsessor.HttpContext.Session.Get<SessionPlayer>(WC.SessionPlayer) != null)
+                        {
+                            SessionPlayer sessionPlayer = HttpContextAccsessor.HttpContext!.Session.Get<SessionPlayer>(WC.SessionPlayer)!;
+                            if (sessionPlayer.LobbyId != null)
+                            {
+                                GameLobby? gameLobby = LobbyController.gameLobbyList.FirstOrDefault(u => u.LobbyId == sessionPlayer.LobbyId);
+                                if (gameLobby != null && gameLobby.InGame)
+                                {
+                                    <li class="nav-item">
+                                        <a class="btn btn-success mx-1" asp-area="" asp-controller="Game" asp-action="Index">Game: @gameLobby.Name</a>
+                                    </li>
+                                    <li class="nav-item">
+                                        <a class="btn btn-danger mx-1" asp-area="" asp-controller="Game" asp-action="ExitGame">Exit</a>
+                                    </li>
+                                }
+                                if (gameLobby != null && !gameLobby.InGame)
+                                {
+                                    <li class="nav-item">
+                                        <a class="btn btn-primary mx-1" asp-area="" asp-controller="Lobby" asp-action="Lobby" asp-route-LobbyName="@gameLobby.Name">Lobby: @gameLobby.Name</a>
+                                    </li>
+                                }
+                            }
+                        }
+                        <partial name="_LoginPartial" />
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </header>
+    <main role="main" class="p3 container-xxl">
+        @RenderBody()
+    </main>
+    <footer class="border-top footer text-muted">
+        <div class="container-xxl">
+            &copy; 2023 - ERATanks - <a asp-area="" asp-controller="Home" asp-action="Privacy" class="text-dark text-decoration-none">Privacy</a>
+        </div>
+    </footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.min.js"></script>
+    <script src="~/js/Site.js"></script>
+    <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

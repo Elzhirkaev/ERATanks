@@ -1,0 +1,186 @@
+﻿@model WorldOfTanks.Models.ViewModels.PassMapElementVM
+@{
+    var title = "Create BackGround Map Element";
+    if (Model.Ind != 0)
+    {
+        title = "Create Coverage Map Element";
+    }
+}
+
+<form method="post" enctype="multipart/form-data">
+    @if (Model.MapElement!.PasMapElementId != 0) 
+    {
+        title = "Edit BackGround Map Element";
+        if (Model.Ind != 0)
+        {
+            title = "Edit Coverage Map Element";
+        }
+        <input asp-for="Ind" hidden />
+        <input asp-for="MapElement!.PasMapElementId" hidden />
+        <input asp-for="MapElement!.Image" hidden />
+    }
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info ps-3">@title</h2>
+        </div>
+        <div class="row">
+            <div class="col-8 m-3">
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="MapElement!.Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="MapElement!.Name" class="form-control" />
+                        <span asp-validation-for="MapElement!.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="MapElement!.Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="MapElement!.Description" class="form-control"></textarea>
+                        <span asp-validation-for="MapElement!.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="MapElement!.Image"></label>
+                    </div>
+                    <div class="col-8">
+                        <input type="file" name="files" id="uploadBox" multiple class="form-control" />
+                    </div>
+                </div>
+                @if (Model.Ind == 0)
+                {
+                    <div class="row p-2">
+                        <div class="col-4">
+                            <label asp-for="MapElement!.Viscosity"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="MapElement!.Viscosity" class="form-control" />
+                            <span asp-validation-for="MapElement!.Viscosity" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row p-2">
+                        <div class="col-6">
+                            <input type="checkbox" asp-for="MapElement!.MachinePermeability" />
+                            <label asp-for="MapElement!.MachinePermeability"></label>
+                        </div>
+                        <div class="col-6">
+                            <input type="checkbox" asp-for="MapElement!.BulletPermeability" />
+                            <label asp-for="MapElement!.BulletPermeability"></label>
+                        </div>
+                    </div>
+                }
+                else
+                {
+                    <div class="row p-2">
+                        <div class="col-4">
+                            <input type="checkbox" asp-for="MapElement!.Invulnerability" />
+                            <label asp-for="MapElement!.Invulnerability"></label> /
+                            <label asp-for="MapElement!.Heath"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="MapElement!.Heath" class="form-control" />
+                            <span asp-validation-for="MapElement!.Heath" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row p-2">
+                        <div class="col-4">
+                            <input type="checkbox" asp-for="MapElement!.Resp" />
+                            <label asp-for="MapElement!.RespTeam"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="MapElement!.RespTeam" class="form-control" />
+                            <span asp-validation-for="MapElement!.RespTeam" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row p-2">
+                        <div class="col-4">
+                            <input type="checkbox" asp-for="MapElement!.HQ" />
+                            <label asp-for="MapElement!.HQTeam"></label>
+                        </div>
+                        <div class="col-8">
+                            <input asp-for="MapElement!.HQTeam" class="form-control" />
+                            <span asp-validation-for="MapElement!.HQTeam" class="text-danger"></span>
+                        </div>
+                    </div>
+                }
+                
+                @*<div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="MapElement!.Background"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="MapElement!.Background" />
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="MapElement!.Invulnerability"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="MapElement!.Invulnerability" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="MapElement!.MachinePermeability"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="MapElement!.MachinePermeability" />
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="MapElement!.BulletPermeability"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="MapElement!.BulletPermeability" />
+                    </div>
+                </div>*@
+                
+                <div class="row p-2">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            @if (Model.MapElement!.PasMapElementId != 0)
+                            {
+                                <input type="submit" class="btn btn-success w-100" value="Edit" />
+                            }
+                            else
+                            {
+                                <input type="submit" onclick="return validateInput()" class="btn btn-success w-100" value="Create" />
+                            }
+                            
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                @if (Model.MapElement!.PasMapElementId != 0)
+                {
+                    <img src="@WC.ImageMapElementPath@Model.MapElement!.Image" style="width:100%; border-radius:5px; border:1px solid #bbb" />
+                }
+            </div>
+        </div>
+    </div>
+</form>
+
+@section Scripts{
+    @{<partial name="_ValidationScriptsPartial"/>}
+    <script>
+        function validateInput(){
+            if(document.getElementById("uploadBox").value=="" ){
+                Swal.fire(
+                    'Error!',
+                    'Please upload an Image',
+                    'error'
+                )
+                return false
+            }
+            return true
+        }
+    </script>
+}
+
+

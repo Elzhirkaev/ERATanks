@@ -1,0 +1,126 @@
+﻿@model WorldOfTanks.Models.ViewModels.GameLobbyListVM
+@using Microsoft.AspNetCore.Http
+@using WorldOfTanks.Controllers;
+@using WorldOfTanks.Utility
+@using WorldOfTanks.Models.GameLobbyModels
+@using Microsoft.AspNetCore.Identity;
+@inject IHttpContextAccessor HttpContextAccsessor
+@{
+    SessionPlayer? sessionPlayer = HttpContextAccsessor.HttpContext!.Session.Get<SessionPlayer>(WC.SessionPlayer);
+    int flag = 0;
+    GameLobby? gameLobby = null;
+    if (sessionPlayer != null && sessionPlayer.LobbyId != null)
+    {
+        List<GameLobby> gameLobbyList = LobbyController.gameLobbyList;
+        if (gameLobbyList.Count > 0)
+        {
+            gameLobby = gameLobbyList.FirstOrDefault(u => u.LobbyId == sessionPlayer.LobbyId);
+            if (gameLobby != null)
+            {
+                if (gameLobby.InGame)
+                {
+                    flag = 2;
+                }
+                else
+                {
+                    flag = 1;
+                }
+            }
+        }
+    };
+}
+
+<div class="m-3 ">
+    <div class="row">
+        <div class="col-3">
+            @if (flag == 1 || flag == 2) 
+            {
+                <label>Your nickname:</label>
+                <input type="text" id="playerName" maxlength="10" class="form-control" value="@sessionPlayer!.PlayerName" disabled />
+            }
+            else
+            {
+                if (Model.PlayerName == null)
+                {
+                    <label>Please enter your nickname:</label>
+                    <input type="text" id="playerName" maxlength="10" class="form-control" />
+                }
+                else
+                {
+                    <label>Your nickname:</label>
+                    <input type="text" id="playerName" maxlength="10" class="form-control" value="@Model.PlayerName" disabled />
+                }
+            }
+        </div>
+        <div class="col-6">
+            <p class="text-danger fs-4 pt-4 m-0" id="message">@Model.Message</p>
+        </div>
+    </div>
+    <br />
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Lobby List</h2>
+        </div>
+        <div class="col-6 text-end">
+            @if (flag == 1) 
+            {
+                <button onclick="location.reload(); return false;" class="btn btn-info">Refresh</button>
+                <a asp-route-LobbyName="@gameLobby!.Name" asp-action="Lobby" class="btn btn-primary mx-1">You are already in the lobby</a>
+            }
+            else if (flag == 2)
+            {
+                <button onclick="location.reload(); return false;" class="btn btn-info">Refresh</button>
+                <a asp-controller="Game" asp-action="Index" class="btn btn-success mx-1">You are in the Game</a>
+            }
+            else
+            {
+                <button onclick="location.reload(); return false;" class="btn btn-info">Refresh</button>
+                <a asp-action="CreateLobby" onmousedown="addUrlParamName(this.id),validateInput()" id="createLobby" class="btn btn-primary">Create New Lobby</a>
+            }
+        </div>
+    </div>
+    <br /><br />
+    @if (Model.GameLobbyList!.Count() > 0)
+    {
+        <table class="table table-bordered table-striped" width="100%">
+            <thead>
+                <tr>
+                    <th>Lobby Name</th>
+                    <th>Player Count</th>
+                    <th>Max Player</th>
+                    <th>In Game</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model.GameLobbyList!)
+                {
+                    <tr>
+                        <td width="20%">@obj.Name</td>
+                        <td width="20%">@obj.PlayerList!.Count</td>
+                        <td width="20%">@obj.MaxPlayer</td>
+                        <td width="20%">@obj.InGame</td>
+                        <td>
+                            <div class="text-center">
+                                <div class="btn-group">
+                                    @if (!obj.InGame && flag == 0) 
+                                    {
+                                        <a asp-route-LobbyName="@obj.Name" asp-action="JoinLobby" onmousedown="addUrlParamName(this.id),validateInput()" class="btn btn-primary mx-1" id="joinLobby_@obj.Name">Join</a>
+                                    }
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>no lobby exists.</p>
+    }
+</div>
+
+@section Scripts{
+    <script src="~/js/IndexLobby.js"></script>
+}

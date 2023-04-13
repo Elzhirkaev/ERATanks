@@ -1,0 +1,233 @@
+﻿@model WorldOfTanks.Models.GamePlayModels.Game
+@using Microsoft.AspNetCore.Http
+@using WorldOfTanks.Utility
+@using WorldOfTanks.Models.GameLobbyModels
+@inject IHttpContextAccessor HttpContextAccsessor
+@{
+    string removeCVGameObjmapElements = System.Text.Json.JsonSerializer.Serialize(Model.removeCVGameObjmapElements);
+    string chatMesList = System.Text.Json.JsonSerializer.Serialize(Model.chatMessageList);
+    SessionPlayer sessionPlayer = HttpContextAccsessor.HttpContext!.Session.Get<SessionPlayer>(WC.SessionPlayer)!;
+    int playerTeam = Model.PlayerList!.FirstOrDefault(u => u.Name == sessionPlayer.PlayerName)!.Team;
+}
+
+<div class="">
+    <input asp-for="@sessionPlayer.PlayerName" id="playerName" hidden />
+    <input asp-for="@playerTeam" id="playerTeam" hidden />
+    <input asp-for="@Model.Map!.Width" id="width" hidden />
+    <input asp-for="@Model.Map!.Height" id="height" hidden />
+    <input asp-for="@Model.Map!.MapPointListBG" id="MapPointListBG" hidden />
+    <input asp-for="@Model.Map!.MapPointListCV" id="MapPointListCV" hidden />
+    <input asp-for="@removeCVGameObjmapElements" id="removeCVGameObjmapElements" hidden />
+    <input asp-for="@chatMesList" id="chatMesList" hidden />
+    <div class="row">
+        <div class="col-2 pt-4">
+            <h4 class="text-info ms-3">Player Info</h4>
+            <div class=" ms-3 pb-2">
+                <div>Name: @sessionPlayer.PlayerName</div>
+                <div id="playerHeath">HP: 0</div>
+                <div id="playerRebirthPoints">RP: @Model.RebirthPoints</div>
+            </div>
+            <div class="ms-3" id="selectT">
+                <div>
+                    <button class="btn btn-danger p-0" style="width:85px" id="hideSelectT" onclick="hideshowSelectTant(true)">HideT</button>
+                    <button class="btn btn-success p-0" style="width:85px" id="showSelectT" onclick="hideshowSelectTant(false)" hidden>ShowT</button>
+                </div>
+                <div id="selectTank">
+                    @foreach (var tank in Model.TankList!)
+                    {
+                        string urlT = WC.ImageTankPath + tank.Image;
+                        string urlW = WC.ImageWeaponPath + tank.Weapon!.Image;
+                        <div>
+                            <button type="button" style="width: 85px; height: 85px;" class="btn p-0 mb-2 border" id="btnT-@tank.TankId" onclick="selectTank(@tank.TankId)">
+                                <p style="height: 15px" class="m-0">@tank.Name</p>
+                                <p style="height: 15px" class="mb-3">RP: @tank.RebirthPoints</p>
+                                <div style="width: 36px; height: 36px; top:-5px" class="p-0 m-auto position-relative" id="tankDiv-@tank.TankId">
+                                    <img src=@urlT class="position-absolute top-0 start-0 w-100" id="imgT-@tank.TankId" />
+                                    <img src=@urlW style="width: 18px; height: 50px; top:-7px; left:9px" class="position-absolute" id="imgW-@tank.TankId" />
+                                </div>
+                            </button>
+                        </div>
+                    }
+                </div>
+            </div>
+            <br />
+            <div class="ms-3">
+                <div>
+                    <div class="d-flex">
+                        <label>Msize</label>
+                        <div id="sqSize"> : 100%</div>
+                    </div>
+                    <div>
+                        <input type="range" class="form-range" min="10" max="30" step="1" value="20" id="SqSizeRange">
+                    </div>
+                </div>
+                <div>
+                    <div class="d-flex">
+                        <label>FrReq</label>
+                        <div id="frequencyRequests"> : 20p/s</div>
+                    </div>
+                    <div>
+                        <input type="range" class="form-range" min="0" max="40" step="1" value="20" id="frequencyRequestsRange">
+                    </div>
+                </div>
+            </div>
+            <div hidden>
+                <div id="div-aim">
+                    <img src="~/images/activeMapElement/aim.png" class="position-absolute top-0 start-0 w-100" id="img-aim" />
+                </div>
+                <div id="div-aimReady">
+                    <img src="~/images/activeMapElement/aimready.png" class="position-absolute top-0 start-0 w-100" id="img-aim" />
+                </div>
+                <div id="div-explosion1">
+                    <img src=~/images/activeMapElement/explosion1.png class="position-absolute top-0 start-0 w-100" id="img-explosion1" />
+                </div>
+                <div id="div-explosion2">
+                    <img src=~/images/activeMapElement/explosion2.png class="position-absolute top-0 start-0 w-100" id="img-explosion2" />
+                </div>
+                <div id="div-explosion3">
+                    <img src=~/images/activeMapElement/explosion3.png class="position-absolute top-0 start-0 w-100" id="img-explosion3" />
+                </div>
+                <div id="div-fire1">
+                    <img src="~/images/activeMapElement/fire1.png" class="position-absolute top-0 start-0 w-100" id="img-fire1" />
+                </div>
+                <div id="div-invulnerability1">
+                    <img src="~/images/activeMapElement/invulnerability1.png" class="position-absolute top-0 start-0 w-100" id="img-invulnerability1" />
+                </div>
+                <div id="div-invulnerability2">
+                    <img src="~/images/activeMapElement/invulnerability2.png" class="position-absolute top-0 start-0 w-100" id="img-invulnerability2" />
+                </div>
+                <audio src="~/sound/intro.mp3" id="sound_intro"></audio>
+                <audio src="~/sound/leave.mp3" id="sound_leave"></audio>
+                <audio src="~/sound/won.mp3" id="sound_won"></audio>
+                <audio src="~/sound/defeat.mp3" id="sound_defeat"></audio>
+                <audio src="~/sound/message.mp3" id="sound_message"></audio>
+                <audio src="~/sound/motorSound.mp3" id="sound_motorSound"></audio>
+                <audio src="~/sound/soundOfMovement.mp3" id="sound_soundOfMovement"></audio>
+                <audio src="~/sound/tankDeath.mp3" id="sound_tankDeath"></audio>
+                <audio src="~/sound/baseDeath.mp3" id="sound_baseDeath"></audio>
+                <audio src="~/sound/armorShot.mp3" id="sound_armorShot"></audio>
+                <audio src="~/sound/reload.mp3" id="sound_reload"></audio>
+                <audio src="~/sound/shotOnConcrete.mp3" id="sound_shotOnConcrete"></audio>
+                <audio src="~/sound/standartShot.mp3" id="sound_standartShot"></audio>
+                @foreach (var item in Model.MapElementList!)
+                {
+                    if (item.PasMapElementId == 0)
+                        {
+                        continue;
+                    }
+                    if (item.Background)
+                    {
+                        string url = WC.ImageMapElementPath + item.Image;
+                        <img src=@url id="imgBG-@item.PasMapElementId" />
+                    }
+                }
+                @foreach (var item in Model.MapElementList)
+                {
+                    if (item.PasMapElementId == 0)
+                    {
+                        continue;
+                    }
+                    if (!item.Background)
+                    {
+                        string url = WC.ImageMapElementPath + item.Image;
+                        if (item.Resp)
+                        {
+                            <img src=@url resp="@item.RespTeam" id="imgCV-@item.PasMapElementId" />
+                        }
+                        else
+                        {
+                            <img src=@url id="imgCV-@item.PasMapElementId" />
+                        }
+                    }
+                }
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="pt-4 pb-5" id="bmBlock" onmousedown="return false">
+                <div class="position-relative m-auto p-0" id="bigMapBlock">
+                    <div class="row m-0" style="width:550px;height:550px" id="mapBlock"></div>
+                </div>
+            </div>
+            <div>
+                <div class="ms-3 p-0">
+                    <div>
+                        <div id="chatDiv" class="border" style="height: 100px; overflow-y: auto;">
+                            <div class="ps-3 text-center border">Chat</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ms-3 row me-0">
+                    <div class="col-sm-8 p-0">
+                        <input class="form-control" type="text" placeholder="Input text" id="chatMesInput" minlength="1" maxlength="100" />
+                    </div>
+                    <button class="btn btn-info col-sm-2" onclick="sendMessage()">Send</button>
+                    <button class="btn btn-danger col-sm-2" id="hideChat" onclick="hideChatik()">OFF</button>
+                    <button class="btn btn-success col-sm-2" id="showChat" onclick="showChatik()" hidden>ON</button>
+                </div>
+                <div id="validMessage" class="ms-3 text-center text-danger">_</div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ms-3 ">
+    <div class="h5 ms-3">
+        <label asp-for="PlayerList"></label>
+    </div>
+    <table class="text-center table table-striped border" width="100%">
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Give RP</th>
+                <th>RPoints</th>
+                <th>Team</th>
+                <th>Kills</th>
+                <th>Death</th>
+                <th>Damage</th>
+                @if (Model.FriendlyFire)
+                {
+                    <th>FrFire</th>
+                }
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var player in Model.PlayerList!)
+            {
+                <input asp-for="@player.PlayerNum" id="PlayerNum_@player.Name" hidden />
+                <tr>
+                    <td width="10%" id="name_@player.Name">@player.Name</td>
+                    @if (player.Team == playerTeam && player.Name != sessionPlayer.PlayerName) 
+                    {
+                        <td width="10%" id="grp_@player.Name">
+                            <div class="row ps-0 pe-0">
+                                <div class="col-8 p-0">
+                                    <input class="form-control p-0" type="number" placeholder="Input RP" name="inputRP" id="rpInput_@player.Name" />
+                                </div>
+                                <div class="col-4 p-0">
+                                    <button class="btn btn-primary d-block ps-1 pe-1 pt-0 pb-0" onclick="giveRP(`@player.Name`)">GRP</button>
+                                </div>
+                            </div>
+                        </td>
+                    }
+                    else
+                    {
+                        <td width="10%" id="name_@player.Name">
+                        </td>
+                    }
+                    <td width="10%" id="rPoints_@player.Name">@player.RebirthPoints</td>
+                    <td width="10%" id="team_@player.Name">@player.Team</td>
+                    <td width="10%" id="kills_@player.Name">@player.Kills</td>
+                    <td width="10%" id="death_@player.Name">@player.Death</td>
+                    <td width="10%" id="damageSum_@player.Name">@player.DamageSum</td>
+                    @if (Model.FriendlyFire)
+                    {
+                        <td width="10%" id="damageFriendly_@player.Name">@player.DamageFriendly</td>
+                    }
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
+<br />
+@section Scripts{
+    <script src="~/js/GameIndex.js"></script>
+}

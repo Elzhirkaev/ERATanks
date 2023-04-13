@@ -1,0 +1,112 @@
+﻿@model WorldOfTanks.Models.GameObject.PassiveMapElement
+
+<form method="post">
+    <input asp-for="PasMapElementId" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info ps-3">Delete Map Element</h2>
+        </div>
+        <div class="row">
+            <div class="col-8 m-3">
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Description" disabled class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Heath"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Heath" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Viscosity"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Viscosity" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <input type="checkbox" asp-for="Resp" disabled/>
+                        <label asp-for="RespTeam"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="RespTeam" class="form-control" disabled/>
+                        <span asp-validation-for="RespTeam" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <input type="checkbox" asp-for="HQ" disabled />
+                        <label asp-for="HQTeam"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="HQTeam" class="form-control" disabled />
+                        <span asp-validation-for="HQTeam" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Background"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="Background" disabled />
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="Invulnerability"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="Invulnerability" disabled />
+                    </div>
+
+                </div>
+
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="MachinePermeability"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="MachinePermeability" disabled />
+                    </div>
+                    <div class="col-4">
+                        <label asp-for="BulletPermeability"></label>
+                    </div>
+                    <div class="col-2">
+                        <input type="checkbox" asp-for="BulletPermeability" disabled />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-danger w-100" value="Delete" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+                
+                <img src="@WC.ImageMapElementPath@Model.Image" style="width:100%; border-radius:5px; border:1px solid #bbb" />
+                
+            </div>
+        </div>
+    </div>
+</form>
+

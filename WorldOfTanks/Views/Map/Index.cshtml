@@ -1,0 +1,85 @@
+﻿@using Microsoft.AspNetCore.Identity
+@using WorldOfTanks.Models.Register;
+@model IEnumerable<WorldOfTanks.Models.GameObject.Map>
+@inject SignInManager<ApplicationUser> SignInManager
+
+@{
+    bool flag = false;
+    int count = Model.Count();
+    if (SignInManager.IsSignedIn(User))
+    {
+        if (User.IsInRole(WC.AdminRole))
+        {
+            flag = true;
+        }
+        else
+        {
+            if (count < 1)
+            {
+                flag = true;
+            }
+        }
+    }
+    else
+    {
+        flag = true;
+    }
+}
+
+<div class="p-3">
+    <div class="row pt-4">
+        <div class="col-6">
+            <h2 class="text-primary">Map Editor</h2>
+        </div>
+        @if (flag)
+        {
+            <div class="col-6 text-end">
+                <a asp-action="CreateEditMap" class="btn btn-primary">Create New Map</a>
+            </div>
+        }
+    </div>
+    <br /><br />
+    @if (Model.Count() > 0)
+    {
+        <table class="table table-bordered table-striped" width="100%">
+            <thead>
+                <tr>
+                    <th>Map Name</th>
+                    <th>Author</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var obj in Model)
+                {
+                    <tr>
+                        <td width="25%">@obj.Name</td>
+                        <td width="25%">@obj.Author</td>
+                        <td width="30%">@obj.Description</td>
+                        <td>
+                            <div class="text-center">
+                                <div class="btn-group">
+                                    <a asp-route-Id="@obj.MapId" asp-action="CreateEditMap" class="btn btn-primary mx-1">Edit</a>
+                                    <a asp-route-Id="@obj.MapId" asp-action="DeleteMap" class="btn btn-danger mx-1">Delete</a>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    }
+    else
+    {
+        <p>
+            To create your map, you need to register and confirm the email.
+        </p>
+        <p class="m-0">
+            An email with a link to the confirmation email may be in the "spam" section.
+        </p>
+        <p class="m-0">
+            After confirming the email address, you need to log out and log in again.
+        </p>
+    }
+</div>

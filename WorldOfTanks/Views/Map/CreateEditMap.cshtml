@@ -1,0 +1,152 @@
+﻿@model WorldOfTanks.Models.ViewModels.MapVM
+@{
+    var title = "Create Map";
+    int mapId = Model.Map!.MapId;
+}
+
+<form method="post">
+    @if (mapId != 0)
+    {
+        title = "Edit Map";
+    }
+    <input asp-for="Map!.MapId" value="@mapId" hidden />
+    <textarea asp-for="Map!.MapPointListBG" hidden class="form-control"></textarea>
+    <textarea asp-for="Map!.MapPointListCV" hidden class="form-control"></textarea>
+    <div class="border mt-3">
+        <div class="row">
+            <div class="col-2">
+                @if (Model.Info != null) 
+                {
+                    <h6 class="text-danger ms-3 mt-3">@Model.Info</h6>
+                }
+                else
+                {
+                    <h5 class="text-info ms-3 mt-3">@title</h5>
+                }
+                <div class="ms-3">
+                    <div>
+                        <label asp-for="Map!.Name"></label>
+                    </div>
+                    <div>
+                        <input asp-for="Map!.Name" class="form-control" />
+                        <span asp-validation-for="Map!.Name" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="ms-3 pt-2">
+                    <div>
+                        <label asp-for="Map!.Description"></label>
+                    </div>
+                    <div>
+                        <textarea asp-for="Map!.Description" class="form-control"></textarea>
+                        <span asp-validation-for="Map!.Description" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="ms-3 ">
+                    <div>
+                        <label asp-for="Map!.NumOfTeams"></label>
+                    </div>
+                    <div>
+                        <input asp-for="Map!.NumOfTeams" class="form-control" />
+                        <span asp-validation-for="Map!.NumOfTeams" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="ms-3 pt-2">
+                    <div>
+                        <div class="d-sm-flex">
+                            <label asp-for="Map!.Width"></label>
+                            <div class="col-6" id="displayWidth"></div>
+                        </div>
+                        <div>
+                            <input asp-for="Map!.Width" type="range"  class="form-range" min="200" max="2000" step="20" id="mapWidth">
+                            <span asp-validation-for="Map!.Width" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div>
+                        <div class="d-sm-flex">
+                            <label asp-for="Map!.Height"></label>
+                            <div class="col-6" id="displayHeight"></div>
+                        </div>
+                        <div>
+                            <input asp-for="Map!.Height" type="range"  class="form-range" min="200" max="2000" step="20" id="mapHeight">
+                            <span asp-validation-for="Map!.Height" class="text-danger"></span>
+                        </div>
+                    </div>
+                    
+                    <div>
+                        <div class="d-sm-flex">
+                            <label>MSize</label>
+                            <div class="col-6" id="sqSize"> : 100%</div>
+                        </div>
+                        <div>
+                            <input type="range" class="form-range" min="10" max="30" step="1" value="20" id="SqSizeRange">
+                        </div>
+                    </div>
+                </div>
+                <div class="ms-1 border row justify-content-start" style="height: 200px; overflow-y: auto;">
+                    <h6 class="m-0">Background</h6>
+                    @foreach (var item in Model.MapElementList!)
+                    { 
+                        if (item.Background)
+                        {
+                            string url = WC.ImageMapElementPath + item.Image;
+                            
+                            <button type="button" onmousedown="mapElementRedact(`@item.Background`,@item.PasMapElementId,`@url` )" class="btn col-sm-6 col-md-4 p-0 mt-2" id="btn-@item.PasMapElementId">
+                                <img src=@url class="w-100 border border-white rounded" id="imgBG-@item.PasMapElementId"/>
+                                <figcaption style="font-size:x-small">@item.Name</figcaption>
+                            </button>
+                            
+                        }
+                    }
+                    <h6 class="m-0">Coverage</h6>
+                    @foreach (var item in Model.MapElementList)
+                    {
+                        if (!item.Background)
+                        {
+                            string url = WC.ImageMapElementPath + item.Image;
+                            <button type="button" onmousedown="mapElementRedact(`@item.Background`,@item.PasMapElementId,`@url` )" class="btn col-sm-6 col-md-4 p-0 mt-2" id="btn-@item.PasMapElementId">
+                                <img src=@url class="w-100 border border-white rounded" id="imgCV-@item.PasMapElementId" />
+                                <figcaption style="font-size:x-small">@item.Name</figcaption>
+                            </button>
+                        }
+                    }
+                </div>
+            </div>
+            <div class="col-10 " onmousedown=" return false">
+                <div>
+                    <div class="mt-2 row m-auto border-end border-bottom " style="width:550px;height:550px" id="mapBlock"></div>
+                </div>
+                <br />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-2"></div>
+            <div class="col-10">
+                <div class="row justify-content-center">
+                    <div class="col-6 row">
+                        <div class="col-6">
+                            @if (Model.Map.MapId != 0)
+                            {
+                                <input type="submit" onclick="return validateInput()" class="btn btn-success w-100" value="Edit" />
+                            }
+                            else
+                            {
+                                <input type="submit" onclick="return validateInput()" class="btn btn-success w-100" value="Create" />
+                            }
+                        </div>
+                        <div class="col-6">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <br />
+    </div>
+</form>
+
+@section Scripts{
+    @{
+        <partial name="_ValidationScriptsPartial" />
+    }
+    <script src="~/js/CreateEditDeleteMap.js"></script>
+}

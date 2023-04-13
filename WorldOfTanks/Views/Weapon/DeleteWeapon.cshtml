@@ -1,0 +1,71 @@
+﻿@model WorldOfTanks.Models.GameObject.Weapon
+
+<form method="post">
+    <input asp-for="WeaponId" hidden />
+    <div class="border p-3">
+        <div class="form-group row">
+            <h2 class="text-info ps-3">Delete Weapon</h2>
+        </div>
+        <div class="row">
+            <div class="col-8 m-3">
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Name"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Name" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Description"></label>
+                    </div>
+                    <div class="col-8">
+                        <textarea asp-for="Description" disabled class="form-control"></textarea>
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="Damage"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="Damage" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="FiringRate"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="FiringRate" disabled class="form-control" />
+                    </div>
+                </div>
+                <div class="row p-2">
+                    <div class="col-4">
+                        <label asp-for="BulletSpeed"></label>
+                    </div>
+                    <div class="col-8">
+                        <input asp-for="BulletSpeed" disabled class="form-control" />
+                    </div>
+                </div>
+               
+                <div class="row p-2">
+                    <div class="col-8 offset-4 row">
+                        <div class="col">
+                            <input type="submit" class="btn btn-danger w-100" value="Delete" />
+                        </div>
+                        <div class="col">
+                            <a asp-action="Index" class="btn btn-info w-100">Back</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-3">
+
+                <img src="@WC.ImageWeaponPath@Model.Image" style="width:100%; border-radius:5px; border:1px solid #bbb" />
+
+            </div>
+        </div>
+    </div>
+</form>
+
