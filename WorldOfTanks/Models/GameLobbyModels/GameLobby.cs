@@ -7,6 +7,7 @@ namespace WorldOfTanks.Models.GameLobbyModels
     public class GameLobby
     {
         public string? LobbyId { get; set; }
+        [Required]
         [Display(Name ="Lobby Name")]
         [StringLength(8, MinimumLength = 2, ErrorMessage = "The length of the string should be from 2 to 8 characters")]
         public string? Name { get; set; }
